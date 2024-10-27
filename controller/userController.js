@@ -14,12 +14,14 @@ const newUser = async(req,res)=>{
         return res.status(300).send('Email is used')
     }
     try{
+        newUser.Password =await bcrypt.hash(newUser.Password ,process.env.PssswordHasch )
         const payload = {
             Name:newUser.Name,
-            Email:newUser.Email
+            Email:newUser.Email,
+            verify:newUser.verify,
+            Password:newUser.Password
         }
         const Token = await jwt.sign(payload , `${process.env.JWT_KEY}`)
-        newUser.Password =await bcrypt.hash(newUser.Password ,process.env.PssswordHasch )
         newUser.Token = Token
         const userMessage =await new Message()
         newUser.IdMessage= Math.floor(Math.random()*909898980987*Math.random())
